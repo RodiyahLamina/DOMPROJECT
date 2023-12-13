@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit-id.js" crossorigin="anonymous"></script>
+    <style>
+        /* Add your additional CSS styles here */
+        body {
+            padding: 10px;
+        }
+
+        .item-container {
+            margin-bottom: 30px;
+        }
+
+        .heart-icon {
+            cursor: pointer;
+        }
+    </style>
+    <title>Shopping Cart</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1 style="text-align: center;"> My Shopping Cart</h1>
+
+        <div class="row" id="cart">
+            <!-- Cart items will be dynamically added here -->
+        </div>
+
+        <!-- External JavaScript libraries -->
+        <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        <script>
+            // Sample data for cart items with the provided image link
+            const cartItems = [
+                { id: 1, name: 'Grilled Meat Sticks', price: 20, quantity: 1, liked: false, image: 'https://t4.ftcdn.net/jpg/02/21/24/13/360_F_221241321_PIn6TJUwdqRQjzYfkSPuusn5BdxLHzIX.jpg' },
+                { id: 2, name: 'Veggies in a Jar', price: 30, quantity: 1, liked: false, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR490R9JPLkTxHLsqBl_r37S2UdpbanasZpPB_xzDYt08p4RhwY71EKFC5YWZEe3kt0q8I&usqp=CAU' },
+                { id: 3, name: 'Cooking Ingredients', price: 30, quantity: 1, liked: false, image: 'https://domf5oio6qrcr.cloudfront.net/medialibrary/5174/31625180-9c33-4cdf-8066-a52a1f6e8175.jpg' }
+            ];
+
+            // Function to render the cart
+            function renderCart() {
+                const cartContainer = document.getElementById('cart');
+                cartContainer.innerHTML = '';
+
+                cartItems.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('col-md-4', 'item-container');
+                    itemDiv.innerHTML = `
+                        <div class="card">
+                            <img src="${item.image}" class="card-img-top" alt="${item.name}">
+                            <div class="card-body">
+                                <h5 class="card-title">${item.name}</h5>
+                                <p class="card-text">$${item.price} each</p>
+                                <p class="card-text">Quantity: ${item.quantity}</p>
+                                <button class="btn btn-primary btn-sm" onclick="increaseQuantity(${item.id})">+</button>
+                                <button class="btn btn-primary btn-sm" onclick="decreaseQuantity(${item.id})">-</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteItem(${item.id})">Delete</button>
+                                <i class="heart-icon ${item.liked ? 'fas' : 'far'} fa-heart text-danger" onclick="toggleLike(${item.id})"></i>
+                            </div>
+                        </div>
+                    `;
+                    cartContainer.appendChild(itemDiv);
+                });
+
+                const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+                cartContainer.innerHTML += `<p>Total Price: $${totalPrice}</p>`;
+            }
+
+            // Function to increase item quantity
+            function increaseQuantity(itemId) {
+                const item = cartItems.find(item => item.id === itemId);
+                if (item) {
+                    item.quantity++;
+                    renderCart();
+                }
+            }
+
+            // Function to decrease item quantity
+            function decreaseQuantity(itemId) {
+                const item = cartItems.find(item => item.id === itemId);
+                if (item && item.quantity > 1) {
+                    item.quantity--;
+                    renderCart();
+                }
+            }
+
+            // Function to delete item from the cart
+            function deleteItem(itemId) {
+                const index = cartItems.findIndex(item => item.id === itemId);
+                if (index !== -1) {
+                    cartItems.splice(index, 1);
+                    renderCart();
+                }
+            }
+
+            // Function to toggle like status
+            function toggleLike(itemId) {
+                const item = cartItems.find(item => item.id === itemId);
+                if (item) {
+                    item.liked = !item.liked;
+                    renderCart();
+                }
+            }
+
+            // Initial rendering of the cart
+            renderCart();
+        </script>
+
+    </div>
+
+</body>
+
+</html>
